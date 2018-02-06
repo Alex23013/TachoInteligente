@@ -189,8 +189,8 @@ void loop(){
     delay(5000);
     digitalWrite(ledPin, LOW);
     //for (int i = 0 ;  i  <  60 ; i++) // 1 hora - 60 min
-      //for (int i = 0 ;  i  <  15 ; i++) // 1 minuto - 60 seg
-        LowPower.powerDown(SLEEP_4S, ADC_OFF, BOD_OFF);
+    for (int i = 0 ;  i  <  15 ; i++) // 1 minuto - 60 seg
+    {  LowPower.powerDown(SLEEP_4S, ADC_OFF, BOD_OFF);}
     
     blinkLedPin(10,250);
 }

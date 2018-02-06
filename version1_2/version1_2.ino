@@ -49,8 +49,9 @@ void mandar_SMS(String mensaje, int typeOfMessage){
   Serial.println("Enviando SMS...");
   GSMSerial.print("AT+CMGF=1\r"); //Comando AT para mandar un SMS
   delay(1000);
-  GSMSerial.println("AT+CMGS=\"+51992547553\"\r"); //Numero al que vamos a enviar el mensaje
-  //guido:992547553
+  GSMSerial.println("AT+CMGS=\"+51943588606\"\r"); //Numero al que vamos a enviar el mensaje
+  //guido:51992547553
+  //cesar:51943588606
   delay(1000);
   mensaje.concat(" (");
   mensaje.concat(typeOfMessage);
@@ -132,7 +133,8 @@ void loop(){
       blinkLedPin(eepromValue,500);
       indexEE +=EEPROM_writeAnything(indexEE, eepromValue);  //Guarda los valores en la EEPROM
       // solo para dejarlo seteado antes de poner en uso
-      //flagfirstMedicion=0;
+     //flagfirstMedicion=0;
+     //eepromValue= 4;
       indexEE +=EEPROM_writeAnything(indexEE, flagfirstMedicion);
       while(true){
         delay(90000);
@@ -142,7 +144,7 @@ void loop(){
     {
       Serial.println(" >> enter r2d2code"); 
       delay(3000);      
-      Serial.print("out");
+      //Serial.print("out");
       while(!flagTakeAction)
       {
         Serial.print ("in ");
@@ -162,7 +164,7 @@ void loop(){
         { //funcionamiento normal
         if(flagfirstMedicion){
           lightSensorValue = analogRead(lightSensorPin);
-          lightSensorValue= 50;
+          //lightSensorValue= 50;
          Serial.print("lightSensorValue ");
          Serial.println(lightSensorValue);
          //lightSensorValue = 150;
@@ -187,7 +189,7 @@ void loop(){
             //el tacho esta abierto por mas del tiempo permitido
             if(contadorIsOpen == (alertIsOpen*60))
              { 
-              String SAlertIsOpen="El tacho ha estdo abierto por mas de";
+              String SAlertIsOpen="El tacho ha estdo abierto por mas de ";
               SAlertIsOpen.concat(alertIsOpen);
               SAlertIsOpen.concat(" min");
               mandar_SMS(SAlertIsOpen,1);
