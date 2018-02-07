@@ -17,7 +17,7 @@ boolean  flagfirstMedicion = false;
 boolean flagSmsSend = false;
 boolean flagTakeAction = false;
 
-Tacho r2d2=Tacho();
+Tacho r2d2=Tacho("953857013");
 boolean isOpen = false;
 int contadorIsOpen = 0;
 int alertIsOpen = 1; //minutos 
@@ -45,18 +45,16 @@ int potEstados(int input)
 1: alert
 2: firstTime
 */
-void mandar_SMS(String mensaje, int typeOfMessage){
+void mandar_SMS(String mensaje){
   Serial.println("Enviando SMS...");
   GSMSerial.print("AT+CMGF=1\r"); //Comando AT para mandar un SMS
   delay(1000);
   GSMSerial.println("AT+CMGS=\"+51944242562\"\r"); //Numero al que vamos a enviar el mensaje
+  //GSMSerial.println("AT+CMGS=\"+51943415889\"\r");
   //guido:51992547553
   //cesar:51943588606
   //jeffrey: 944242562
   delay(1000);
-  mensaje.concat(" (");
-  mensaje.concat(typeOfMessage);
-  mensaje.concat(")");
   GSMSerial.println(mensaje);
   delay(100);
   GSMSerial.println((char)26);//Comando de finalizacion ^Z
@@ -88,13 +86,13 @@ void ledFade(boolean isInicializated){
 }
 
 void llamada(){
-delay(5000);
-  //GSMSerial.print("ATD+51943415889;\r");
-  GSMSerial.print("ATD+51992547553;\r");
-Serial.println("llamando");
-delay(20000);
-Serial.println("finalizar llamada");
-GSMSerial.print("ATH\r");
+  delay(5000);
+  GSMSerial.print("ATD+51943415889;\r");
+   // GSMSerial.print("ATD+51992547553;\r");
+  Serial.println("llamando");
+  delay(20000);
+  Serial.println("finalizar llamada");
+  GSMSerial.print("ATH\r");
 }
 
 
@@ -154,9 +152,9 @@ void loop(){
         buttonStartState = digitalRead(buttonStartPin); 
         if (buttonStartState == HIGH && flagfirstMedicion == false)
         {//buttonStartState is pressed (primera vez)
-         String FisrtMedicion = r2d2.medir();
-         mandar_SMS(FisrtMedicion,2);
-         Serial.println("FisrtMedicion: (2) ");//debugging
+         String FisrtMedicion = r2d2.medir(1);
+         mandar_SMS(FisrtMedicion);
+         Serial.println("FisrtMedicion: ");//debugging
          Serial.println(FisrtMedicion); //debugging
          flagfirstMedicion = true;
          flagTakeAction = true;
@@ -165,18 +163,17 @@ void loop(){
         { //funcionamiento normal
         if(flagfirstMedicion){
           lightSensorValue = analogRead(lightSensorPin);
-          //lightSensorValue= 50;
-         Serial.print("lightSensorValue ");
-         Serial.println(lightSensorValue);
-         //lightSensorValue = 150;
+          Serial.print("lightSensorValue ");
+          Serial.println(lightSensorValue);
+          //lightSensorValue = 150;//prueba mensaje de alerta
          if(lightSensorValue<100)
           { //el tacho esta cerrado
            if(flagSmsSend == false)
             {
-             String resMedicion = r2d2.medir();
-             mandar_SMS(resMedicion,0);
+             String resMedicion = r2d2.medir(0);
+             mandar_SMS(resMedicion);
              //llamada();
-             Serial.println("resMedicion: (0) ");//debugging
+             Serial.println("resMedicion:  ");//debugging
              Serial.println(resMedicion);//debugging
              flagSmsSend = true;
              blinkLedPin(3,200);
@@ -190,10 +187,8 @@ void loop(){
             //el tacho esta abierto por mas del tiempo permitido
             if(contadorIsOpen == (alertIsOpen*60))
              { 
-              String SAlertIsOpen="El tacho ha estdo abierto por mas de ";
-              SAlertIsOpen.concat(alertIsOpen);
-              SAlertIsOpen.concat(" min");
-              mandar_SMS(SAlertIsOpen,1);
+              String SAlertIsOpen=r2d2.medir(2);
+              mandar_SMS(SAlertIsOpen);
               Serial.println(SAlertIsOpen);
               contadorIsOpen = 0;
               flagTakeAction = true;
