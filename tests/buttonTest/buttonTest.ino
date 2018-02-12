@@ -1,5 +1,5 @@
 const int buttonPin = A3;
-const int ledPin =  13; 
+const int ledPin =  A2; 
 
 int buttonState = 0; 
 

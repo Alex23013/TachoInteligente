@@ -5,7 +5,7 @@ int indexEE;
 int valueEeprom = 0;
 const int potPin = A1;
 int valuePot;
-int led = 13;
+int led = A2;
 const int limitsPot[5]={0,255,512,767,1023}; // 1,2,3,4
 
 

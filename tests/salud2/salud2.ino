@@ -48,8 +48,8 @@ void loop(){
 if(contador == 0){
   //{ \"US0\":\"12", "US1":"12", "US2":"15","US3":"14" }
   String stringOne = "SMS(HELLO WORLD ALMOST)-->"; 
-  //mandar_SMS(stringOne,2);
-  llamada();
+  mandar_SMS(stringOne,2);
+  //llamada();
   contador = 1;
    }
 }
