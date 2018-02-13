@@ -12,7 +12,7 @@ void mandar_SMS(String mensaje, int typeOfMessage){
   Serial.println("Enviando SMS...");
   GSMSerial.print("AT+CMGF=1\r"); //Comando AT para mandar un SMS
   delay(1000);
-  GSMSerial.println("AT+CMGS=\"+51943415889\"\r"); //Numero al que vamos a enviar el mensaje
+  GSMSerial.println("AT+CMGS=\"+51944242562\"\r"); //Numero al que vamos a enviar el mensaje
   delay(1000);
   mensaje.concat('(');
   mensaje.concat(typeOfMessage);

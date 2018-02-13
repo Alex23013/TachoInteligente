@@ -12,8 +12,8 @@ const int potPin = A1;
 const int ledPin = A2;
 
 int buttonStartState = 0;      
-
-boolean  flagfirstMedicion = false;
+String FirstMedicion("");
+boolean flagfirstMedicion = false;
 boolean flagSmsSend = false;
 boolean flagTakeAction = false;
 
@@ -25,6 +25,8 @@ int indexEE;
 int eepromValue = 0;
 int potValue;
 int lightSensorValue;
+long int iniTiempoInicio =0;
+long int endTiempoInicio =0;
 const int limitsPot[5]={0,255,512,767,1023}; // 1,2,3,4
 
 int potEstados(int input)
@@ -49,7 +51,7 @@ void mandar_SMS(String mensaje){
   Serial.println("Enviando SMS...");
   GSMSerial.print("AT+CMGF=1\r"); //Comando AT para mandar un SMS
   delay(1000);
-  GSMSerial.println("AT+CMGS=\"+51944242562\"\r"); //Numero al que vamos a enviar el mensaje
+  GSMSerial.println("AT+CMGS=\"+51999850175\"\r"); //Numero al que vamos a enviar el mensaje
   //GSMSerial.println("AT+CMGS=\"+51943415889\"\r");
   //guido:51992547553
   //cesar:51943588606
@@ -135,45 +137,56 @@ void loop(){
      //flagfirstMedicion=0;
      //eepromValue= 4;
       indexEE +=EEPROM_writeAnything(indexEE, flagfirstMedicion);
-      while(true){
-        delay(90000);
+      while(true)
+      {
+        digitalWrite(ledPin,HIGH);
+        buttonStartState = digitalRead(buttonStartPin);
+        Serial.println(buttonStartState);
+      iniTiempoInicio = millis();  
+      while (buttonStartState == HIGH)
+      {
+        buttonStartState = digitalRead(buttonStartPin);   
       }
+      endTiempoInicio = millis();
+      
+      if (endTiempoInicio - iniTiempoInicio >= 3000)
+      {
+         FirstMedicion = r2d2.medir(1);
+         mandar_SMS(FirstMedicion);
+         blinkLedPin(4, 200);
+         Serial.println("FisrtMedicion: again ");//debugging
+         Serial.println(FirstMedicion); //debugging
+         flagfirstMedicion = true;
+         flagTakeAction = true;
+      }
+      
+      }
+      /*while(true){
+        delay(90000);
+      }*/
     }
   else
     {
       Serial.println(" >> enter r2d2code"); 
       delay(3000);      
-      //Serial.print("out");
       while(!flagTakeAction)
       {
-        Serial.print ("in ");
-        Serial.println(buttonStartState);
         ledFade(flagfirstMedicion);
         buttonStartState = digitalRead(buttonStartPin); 
+        Serial.print("buttonStartState: ");
+        Serial.println(buttonStartState);
         if (buttonStartState == HIGH )
         {
-          if( flagfirstMedicion == false){//buttonStartState is pressed (primera vez)
-         String FisrtMedicion = r2d2.medir(1);
-         mandar_SMS(FisrtMedicion);
-         Serial.println("FisrtMedicion: ");//debugging
-         Serial.println(FisrtMedicion); //debugging
-         flagfirstMedicion = true;
-         flagTakeAction = true;}
-         else{
-            iniTiempoInicio = millis();  
-            while (buttonStartState == HIGH)
-            {
-              buttonStartState = digitalRead(buttonStartPin);   
-            }
-            endTiempoInicio = millis();
-            
-            if (endTiempoInicio - iniTiempoInicio >= 3000)
-            {
-              mandar_SMS(FisrtMedicion);
-              flagfirstMedicion = true;
-              flagTakeAction = true;
-            }
-         }
+          if( flagfirstMedicion == false)
+            {//buttonStartState is pressed (primera vez)
+             FirstMedicion = r2d2.medir(1);
+             mandar_SMS(FirstMedicion);
+             blinkLedPin(4, 200);
+             Serial.println("FisrtMedicion: ");//debugging
+             Serial.println(FirstMedicion); //debugging
+             flagfirstMedicion = true;
+             flagTakeAction = true;
+             }
         }
         else
         { //funcionamiento normal
@@ -192,7 +205,7 @@ void loop(){
              Serial.println("resMedicion:  ");//debugging
              Serial.println(resMedicion);//debugging
              flagSmsSend = true;
-             blinkLedPin(3,200);
+             blinkLedPin(4,200);
              flagTakeAction = true;
             }  
            contadorIsOpen = 0;
@@ -220,9 +233,33 @@ void loop(){
       Serial.println("Reiniciar a 0");
       indexEE += EEPROM_writeAnything(indexEE, eepromValue);      
       indexEE += EEPROM_writeAnything(indexEE, flagfirstMedicion);
-      while(true){
+      while(true)
+      {
+        digitalWrite(ledPin,HIGH);
+        buttonStartState = digitalRead(buttonStartPin);
+        Serial.println(buttonStartState);
+      iniTiempoInicio = millis();  
+      while (buttonStartState == HIGH)
+      {
+        buttonStartState = digitalRead(buttonStartPin);   
+      }
+      endTiempoInicio = millis();
+      
+      if (endTiempoInicio - iniTiempoInicio >= 3000)
+      {
+         FirstMedicion = r2d2.medir(1);
+         mandar_SMS(FirstMedicion);
+         blinkLedPin(4, 200);
+         Serial.println("FisrtMedicion: again ");//debugging
+         Serial.println(FirstMedicion); //debugging
+         flagfirstMedicion = true;
+         flagTakeAction = true;
+      }
+      
+      }
+      /*while(true){
         delay(90000);
-      }      
+      } */     
     } 
-    //blinkLedPin(7,250);
+    
 }
