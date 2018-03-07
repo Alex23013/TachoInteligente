@@ -47,13 +47,11 @@ int potEstados(int input)
 1: alert
 2: firstTime
 */
-void mandar_SMS0(String mensaje){
+void mandar_SMS0(String mensaje){//mensaje a jeffrey
   Serial.println("Enviando SMS...");
   GSMSerial.print("AT+CMGF=1\r"); //Comando AT para mandar un SMS
   delay(1000);
   GSMSerial.println("AT+CMGS=\"+51944242562\"\r");
-  //guido:51992547553
-  //cesar:51943588606
   delay(1000);
   GSMSerial.println(mensaje);
   delay(100);
@@ -63,7 +61,7 @@ void mandar_SMS0(String mensaje){
   delay(5000); // Esperamos un tiempo para que envíe el SMS
   Serial.println("SMS enviado");
 }
-void mandar_SMS1(String mensaje){ //nuemro de lima
+void mandar_SMS1(String mensaje){ //mensaje lima
   Serial.println("Enviando SMS1...");
   GSMSerial.print("AT+CMGF=1\r");
   delay(1000); GSMSerial.println("AT+CMGS=\"+51999850175\"\r"); 
@@ -74,15 +72,15 @@ void mandar_SMS1(String mensaje){ //nuemro de lima
   Serial.println("SMS1 enviado");
 }
 
-void mandar_SMS1(String mensaje){ //nuemro de lima
-  Serial.println("Enviando SMS1...");
+void mandar_SMS2(String mensaje){ //mensaje a cesar
+  Serial.println("Enviando SMS2...");
   GSMSerial.print("AT+CMGF=1\r");
   delay(1000); GSMSerial.println("AT+CMGS=\"+51943588606\"\r"); 
   delay(1000); GSMSerial.println(mensaje);
   delay(100); GSMSerial.println((char)26);
   delay(100); GSMSerial.println();
   delay(5000); 
-  Serial.println("SMS1 enviado");
+  Serial.println("SMS2 enviado");
 }
 
 void blinkLedPin(int times, int duration){
@@ -171,8 +169,10 @@ void loop(){
       if (endTiempoInicio - iniTiempoInicio >= 3000)
       {
          FirstMedicion = r2d2.medir(1);
-         mandar_SMS(FirstMedicion);
+         mandar_SMS0(FirstMedicion);
+         mandar_SMS1(FirstMedicion);
          blinkLedPin(4, 200);
+         mandar_SMS2(FirstMedicion);
          Serial.println("FisrtMedicion: again ");//debugging
          Serial.println(FirstMedicion); //debugging
          flagfirstMedicion = true;
@@ -199,8 +199,10 @@ void loop(){
           if( flagfirstMedicion == false)
             {//buttonStartState is pressed (primera vez)
              FirstMedicion = r2d2.medir(1);
-             mandar_SMS(FirstMedicion);
+             mandar_SMS0(FirstMedicion);
+             mandar_SMS1(FirstMedicion);
              blinkLedPin(4, 200);
+             mandar_SMS2(FirstMedicion);
              Serial.println("FisrtMedicion: ");//debugging
              Serial.println(FirstMedicion); //debugging
              flagfirstMedicion = true;
@@ -219,7 +221,9 @@ void loop(){
            if(flagSmsSend == false)
             {
              String resMedicion = r2d2.medir(0);
-             mandar_SMS(resMedicion);
+             mandar_SMS0(resMedicion);
+             mandar_SMS1(resMedicion);
+             mandar_SMS2(resMedicion);
              //llamada();
              Serial.println("resMedicion:  ");//debugging
              Serial.println(resMedicion);//debugging
@@ -236,7 +240,9 @@ void loop(){
             if(contadorIsOpen == (alertIsOpen*60))
              { 
               String SAlertIsOpen=r2d2.medir(2);
-              mandar_SMS(SAlertIsOpen);
+              mandar_SMS0(SAlertIsOpen);
+              mandar_SMS1(SAlertIsOpen);
+              mandar_SMS2(SAlertIsOpen);
               Serial.println(SAlertIsOpen);
               contadorIsOpen = 0;
               flagTakeAction = true;
@@ -267,8 +273,10 @@ void loop(){
       if (endTiempoInicio - iniTiempoInicio >= 3000)
       {
          FirstMedicion = r2d2.medir(1);
-         mandar_SMS(FirstMedicion);
+         mandar_SMS0(FirstMedicion);
+         mandar_SMS1(FirstMedicion);
          blinkLedPin(4, 200);
+         mandar_SMS2(FirstMedicion);
          Serial.println("FisrtMedicion: again ");//debugging
          Serial.println(FirstMedicion); //debugging
          flagfirstMedicion = true;
