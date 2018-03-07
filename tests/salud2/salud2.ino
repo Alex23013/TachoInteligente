@@ -47,7 +47,7 @@ Serial.begin(9600);
 void loop(){
 if(contador == 0){
   //{ \"US0\":\"12", "US1":"12", "US2":"15","US3":"14" }
-  String stringOne = "SMS(HELLO WORLD ALMOST)-->"; 
+  String stringOne = "SMS de prueba -->"; 
   mandar_SMS(stringOne,2);
   //llamada();
   contador = 1;

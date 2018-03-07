@@ -47,15 +47,13 @@ int potEstados(int input)
 1: alert
 2: firstTime
 */
-void mandar_SMS(String mensaje){
+void mandar_SMS0(String mensaje){
   Serial.println("Enviando SMS...");
   GSMSerial.print("AT+CMGF=1\r"); //Comando AT para mandar un SMS
   delay(1000);
-  //GSMSerial.println("AT+CMGS=\"+51999850175\"\r"); //Numero al que vamos a enviar el mensaje
   GSMSerial.println("AT+CMGS=\"+51944242562\"\r");
   //guido:51992547553
   //cesar:51943588606
-  //jeffrey: 944242562
   delay(1000);
   GSMSerial.println(mensaje);
   delay(100);
@@ -64,6 +62,27 @@ void mandar_SMS(String mensaje){
   GSMSerial.println();
   delay(5000); // Esperamos un tiempo para que envíe el SMS
   Serial.println("SMS enviado");
+}
+void mandar_SMS1(String mensaje){ //nuemro de lima
+  Serial.println("Enviando SMS1...");
+  GSMSerial.print("AT+CMGF=1\r");
+  delay(1000); GSMSerial.println("AT+CMGS=\"+51999850175\"\r"); 
+  delay(1000); GSMSerial.println(mensaje);
+  delay(100); GSMSerial.println((char)26);
+  delay(100); GSMSerial.println();
+  delay(5000); 
+  Serial.println("SMS1 enviado");
+}
+
+void mandar_SMS1(String mensaje){ //nuemro de lima
+  Serial.println("Enviando SMS1...");
+  GSMSerial.print("AT+CMGF=1\r");
+  delay(1000); GSMSerial.println("AT+CMGS=\"+51943588606\"\r"); 
+  delay(1000); GSMSerial.println(mensaje);
+  delay(100); GSMSerial.println((char)26);
+  delay(100); GSMSerial.println();
+  delay(5000); 
+  Serial.println("SMS1 enviado");
 }
 
 void blinkLedPin(int times, int duration){
