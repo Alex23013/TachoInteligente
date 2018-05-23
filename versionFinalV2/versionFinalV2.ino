@@ -5,10 +5,7 @@
 #include <SoftwareSerial.h>
 SoftwareSerial GSMSerial(11,10); 
 
-
-const int lightSensorPin = A0;
 const int buttonStartPin = A3;
-const int potPin = A1;
 const int ledPin = A2;
 
 int buttonStartState = 0;      
@@ -18,29 +15,11 @@ boolean flagSmsSend = false;
 boolean flagTakeAction = false;
 
 Tacho r2d2=Tacho("953857013");
-boolean isOpen = false;
-int contadorIsOpen = 0;
-int alertIsOpen = 1; //minutos 
 int indexEE;
 int eepromValue = 0;
-int potValue;
-int lightSensorValue;
 long int iniTiempoInicio =0;
 long int endTiempoInicio =0;
-const int limitsPot[5]={0,255,512,767,1023}; // 1,2,3,4
-
-int potEstados(int input)
-{
-  int res =0;
-  for(int i = 1 ;i<5;i++)
-  {
-      if(input >= limitsPot[i-1] && input <= limitsPot[i])
-      {
-        res = i*4;
-      }
-  }
-  return res;
-}
+int potValue;
 
 /* typeOfMessage could be ...
 0: regular
@@ -121,8 +100,6 @@ void setup()
  GSMSerial.begin(9600);
  delay(5000);
  pinMode(buttonStartPin,INPUT);     
- pinMode(potPin,INPUT); 
- pinMode(lightSensorPin,INPUT);     
  pinMode(ledPin, OUTPUT);
  Serial.println("Start r2d2 program");
  delay(5000);
@@ -134,11 +111,7 @@ void loop(){
   indexEE += EEPROM_readAnything(indexEE, flagfirstMedicion); 
   Serial.println("flagfirstMedicion: ");
   Serial.println(flagfirstMedicion); 
-  potValue = analogRead(potPin);
-  Serial.print("potValue: ");
-  Serial.println(potValue);  
-  potValue = potEstados(potValue);
-  //potValue = 0;
+  potValue = 4;
   Serial.print("potEstados: ");
   Serial.println(potValue);  
   if (eepromValue < potValue)
@@ -179,9 +152,6 @@ void loop(){
       }
       
       }
-      /*while(true){
-        delay(90000);
-      }*/
     }
   else
     {
@@ -211,12 +181,6 @@ void loop(){
         else
         { //funcionamiento normal
         if(flagfirstMedicion){
-          lightSensorValue = analogRead(lightSensorPin);
-          Serial.print("lightSensorValue ");
-          Serial.println(lightSensorValue);
-          //lightSensorValue = 150;//prueba mensaje de alerta
-         if(lightSensorValue<100)
-          { //el tacho esta cerrado
            if(flagSmsSend == false)
             {
              String resMedicion = r2d2.medir(0);
@@ -230,62 +194,39 @@ void loop(){
              blinkLedPin(4,200);
              flagTakeAction = true;
             }  
-           contadorIsOpen = 0;
-          }
-         else
-          { //el tacho esta abierto
-            Serial.println(contadorIsOpen); //debugging
-            //el tacho esta abierto por mas del tiempo permitido
-            if(contadorIsOpen == (alertIsOpen*60))
-             { 
-              String SAlertIsOpen=r2d2.medir(2);
-              mandar_SMS0(SAlertIsOpen);
-              mandar_SMS1(SAlertIsOpen);
-              mandar_SMS2(SAlertIsOpen);
-              Serial.println(SAlertIsOpen);
-              contadorIsOpen = 0;
-              flagTakeAction = true;
-             }
-            delay(1000); // 1seg -- tiempo de espera para volver a revisar si ya cerraron el tacho
-            contadorIsOpen++;           
-          }
          } 
         }
-      }
+      
       eepromValue=0;
       indexEE = 0;
       Serial.println("Reiniciar a 0");
       indexEE += EEPROM_writeAnything(indexEE, eepromValue);      
       indexEE += EEPROM_writeAnything(indexEE, flagfirstMedicion);
       while(true)
-      {
-        digitalWrite(ledPin,HIGH);
-        buttonStartState = digitalRead(buttonStartPin);
-        Serial.println(buttonStartState);
-      iniTiempoInicio = millis();  
-      while (buttonStartState == HIGH)
-      {
-        buttonStartState = digitalRead(buttonStartPin);   
-      }
-      endTiempoInicio = millis();
-      
-      if (endTiempoInicio - iniTiempoInicio >= 3000)
-      {
-         FirstMedicion = r2d2.medir(1);
-         mandar_SMS0(FirstMedicion);
-         mandar_SMS1(FirstMedicion);
-         blinkLedPin(4, 200);
-         mandar_SMS2(FirstMedicion);
-         Serial.println("FisrtMedicion: again ");//debugging
-         Serial.println(FirstMedicion); //debugging
-         flagfirstMedicion = true;
-         flagTakeAction = true;
-      }
-      
-      }
-      /*while(true){
-        delay(90000);
-      } */     
-    } 
-    
-}
+        {
+          digitalWrite(ledPin,HIGH);
+          buttonStartState = digitalRead(buttonStartPin);
+          Serial.println(buttonStartState);
+          iniTiempoInicio = millis();  
+          while (buttonStartState == HIGH)
+            {
+              buttonStartState = digitalRead(buttonStartPin);   
+            }
+          endTiempoInicio = millis();
+          
+          if (endTiempoInicio - iniTiempoInicio >= 3000)
+            {
+               FirstMedicion = r2d2.medir(1);
+               mandar_SMS0(FirstMedicion);
+               mandar_SMS1(FirstMedicion);
+               blinkLedPin(4, 200);
+               mandar_SMS2(FirstMedicion);
+               Serial.println("FisrtMedicion: again ");//debugging
+               Serial.println(FirstMedicion); //debugging
+               flagfirstMedicion = true;
+               flagTakeAction = true;
+            }
+        }//end while
+      } //end while
+    } // end else    
+}//end loop
