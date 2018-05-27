@@ -5,7 +5,7 @@
 #include <SoftwareSerial.h>
 SoftwareSerial GSMSerial(11,10); 
 
-const int buttonStartPin = A3;
+const int buttonStartPin = A1;
 const int ledPin = A2;
 
 int buttonStartState = 0;      
@@ -131,20 +131,20 @@ void loop(){
         digitalWrite(ledPin,HIGH);
         buttonStartState = digitalRead(buttonStartPin);
         Serial.println(buttonStartState);
-      iniTiempoInicio = millis();  
+     /* iniTiempoInicio = millis();  
       while (buttonStartState == HIGH)
       {
         buttonStartState = digitalRead(buttonStartPin);   
       }
-      endTiempoInicio = millis();
+      endTiempoInicio = millis();*/
       
-      if (endTiempoInicio - iniTiempoInicio >= 3000)
+      if (buttonStartState == HIGH)
       {
          FirstMedicion = r2d2.medir(1);
          mandar_SMS0(FirstMedicion);
-         mandar_SMS1(FirstMedicion);
+         //mandar_SMS1(FirstMedicion);
          blinkLedPin(4, 200);
-         mandar_SMS2(FirstMedicion);
+         //mandar_SMS2(FirstMedicion);
          Serial.println("FisrtMedicion: again ");//debugging
          Serial.println(FirstMedicion); //debugging
          flagfirstMedicion = true;
@@ -169,9 +169,9 @@ void loop(){
             {//buttonStartState is pressed (primera vez)
              FirstMedicion = r2d2.medir(1);
              mandar_SMS0(FirstMedicion);
-             mandar_SMS1(FirstMedicion);
+             //mandar_SMS1(FirstMedicion);
              blinkLedPin(4, 200);
-             mandar_SMS2(FirstMedicion);
+             //mandar_SMS2(FirstMedicion);
              Serial.println("FisrtMedicion: ");//debugging
              Serial.println(FirstMedicion); //debugging
              flagfirstMedicion = true;
@@ -185,8 +185,8 @@ void loop(){
             {
              String resMedicion = r2d2.medir(0);
              mandar_SMS0(resMedicion);
-             mandar_SMS1(resMedicion);
-             mandar_SMS2(resMedicion);
+             //mandar_SMS1(resMedicion);
+             //mandar_SMS2(resMedicion);
              //llamada();
              Serial.println("resMedicion:  ");//debugging
              Serial.println(resMedicion);//debugging
@@ -207,20 +207,20 @@ void loop(){
           digitalWrite(ledPin,HIGH);
           buttonStartState = digitalRead(buttonStartPin);
           Serial.println(buttonStartState);
-          iniTiempoInicio = millis();  
+          /*iniTiempoInicio = millis();  
           while (buttonStartState == HIGH)
             {
               buttonStartState = digitalRead(buttonStartPin);   
             }
-          endTiempoInicio = millis();
+          endTiempoInicio = millis();*/
           
-          if (endTiempoInicio - iniTiempoInicio >= 3000)
+          if (buttonStartState == HIGH)
             {
                FirstMedicion = r2d2.medir(1);
                mandar_SMS0(FirstMedicion);
-               mandar_SMS1(FirstMedicion);
+               //mandar_SMS1(FirstMedicion);
                blinkLedPin(4, 200);
-               mandar_SMS2(FirstMedicion);
+               //mandar_SMS2(FirstMedicion);
                Serial.println("FisrtMedicion: again ");//debugging
                Serial.println(FirstMedicion); //debugging
                flagfirstMedicion = true;
