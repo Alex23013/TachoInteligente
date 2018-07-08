@@ -61,6 +61,18 @@ void mandar_SMS1(String mensaje){ //mensaje Pocha
   delay(5000); 
   Serial.println("SMS1 enviado");
 }
+
+void mandar_SMSPrueba(String mensaje){ //mensaje Maria
+  Serial.println("Enviando SMSPrueba...");
+  GSMSerial.print("AT+CMGF=1\r");
+  delay(1000); GSMSerial.println("AT+CMGS=\"+51943415889\"\r"); 
+  delay(1000); GSMSerial.println(mensaje);
+  delay(100); GSMSerial.println((char)26);
+  delay(100); GSMSerial.println();
+  delay(5000); 
+  Serial.println("SMSPrueba enviado");
+}
+
 void blinkLedPin(int times, int duration){
   for(int i = 0;i < times; i++){
      digitalWrite(ledPin, HIGH);
@@ -145,6 +157,7 @@ void loop(){
          //mandar_SMS1(FirstMedicion);
          blinkLedPin(4, 200);
          //mandar_SMS2(FirstMedicion);
+         mandar_SMSPrueba(FirstMedicion);
          Serial.println("FisrtMedicion: again ");//debugging
          Serial.println(FirstMedicion); //debugging
          flagfirstMedicion = true;
@@ -171,6 +184,7 @@ void loop(){
              mandar_SMS0(FirstMedicion);
              //mandar_SMS1(FirstMedicion);
              blinkLedPin(4, 200);
+            mandar_SMSPrueba(FirstMedicion);
              //mandar_SMS2(FirstMedicion);
              Serial.println("FisrtMedicion: ");//debugging
              Serial.println(FirstMedicion); //debugging
@@ -192,6 +206,7 @@ void loop(){
              Serial.println(resMedicion);//debugging
              flagSmsSend = true;
              blinkLedPin(4,200);
+             mandar_SMSPrueba(resMedicion);
              flagTakeAction = true;
             }  
          } 
@@ -220,6 +235,7 @@ void loop(){
                mandar_SMS0(FirstMedicion);
                //mandar_SMS1(FirstMedicion);
                blinkLedPin(4, 200);
+              mandar_SMSPrueba(FirstMedicion);
                //mandar_SMS2(FirstMedicion);
                Serial.println("FisrtMedicion: again ");//debugging
                Serial.println(FirstMedicion); //debugging
