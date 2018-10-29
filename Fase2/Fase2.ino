@@ -14,6 +14,9 @@ int buttonStartState = 0;
 String FirstMedicion("");
 String ResMedicion("");
 Tacho r2d2=Tacho("983887060");
+// estado II : 0
+// estado O : 1
+// estado 1 : 1
 
 /* typeOfMessage could be ...
 0: regular
@@ -25,7 +28,7 @@ void mandar_SMS0(String mensaje){//mensaje a jeffrey
   GSMSerial.print("AT+CMGF=1\r"); //Comando AT para mandar un SMS
   delay(1000);
   
-//  GSMSerial.println("AT+CMGS=\"+51992547553\"\r");
+  //GSMSerial.println("AT+CMGS=\"+51992547553\"\r");
   GSMSerial.println("AT+CMGS=\"+51944242562\"\r");
   delay(1000);
   GSMSerial.println(mensaje);
@@ -59,10 +62,11 @@ void mandar_SMS1(String mensaje){ //mensaje Stoyan
   Serial.println("SMS1 enviado");
 }
 
-void mandar_SMSPrueba(String mensaje){ //mensaje Maria
+void mandar_SMSPrueba(String mensaje){ //mensaje Paola
   Serial.println("Enviando SMSPrueba...");
   GSMSerial.print("AT+CMGF=1\r");
-  delay(1000); GSMSerial.println("AT+CMGS=\"+51943415889\"\r"); 
+  //delay(1000); GSMSerial.println("AT+CMGS=\"+51943415889\"\r"); 
+  delay(1000); GSMSerial.println("AT+CMGS=\"+51984503610\"\r");
   delay(1000); GSMSerial.println(mensaje);
   delay(100); GSMSerial.println((char)26);
   delay(100); GSMSerial.println();
@@ -141,7 +145,7 @@ void loop(){
         mandar_SMS1(FirstMedicion);
         mandar_SMS2(FirstMedicion);
         blinkLedPin(4, 200);
-        //  mandar_SMSPrueba(FirstMedicion);
+          mandar_SMSPrueba(FirstMedicion);
         cont1 = 0;
         }
     }
@@ -165,7 +169,7 @@ void loop(){
           mandar_SMS2(ResMedicion);
           //llamada();
           blinkLedPin(4,200);
-          //mandar_SMSPrueba(ResMedicion);
+          mandar_SMSPrueba(ResMedicion);
           cont2 = 0;
         }        
      } 
