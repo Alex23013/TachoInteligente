@@ -44,7 +44,7 @@ public:
         //Serial.print(i+1); //only for debugging
         Serial.print(" - "); //only for debugging
         Serial.print(valores[i]); //only for debugging
-      
+        if(valores[i]==206){valores[i]=0;}
         String val(valores[i]);
         resMedicion.concat("\"sensor");
         resMedicion.concat(i+1);
@@ -63,4 +63,3 @@ public:
     return resMedicion;///
   }
 };
-
